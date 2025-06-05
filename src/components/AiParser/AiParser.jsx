@@ -1,5 +1,6 @@
 import './AiParser.css'
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
+import { BsStars } from "react-icons/bs";
 
 const AiParser = () => {
     const [note, setNote] = useState('');
@@ -33,7 +34,7 @@ const AiParser = () => {
                     value={note}
                     onChange={e => setNote(e.target.value)}
                 />
-                <button className="btn btn-primary">Extract contact</button>
+                <button className="my-btn"><BsStars className='ai-icon me-1' />Extract contact</button>
             </div>
 
             {showExample && (

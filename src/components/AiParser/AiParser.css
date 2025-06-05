@@ -23,15 +23,23 @@
   width: 100%;
 }
 
-.ai-form .btn {
+.ai-form button {
   position: absolute;
   bottom: 20px;
   right: 20px;
-  z-index: 1;
+  z-index: 5;
 }
 
 .click-to-try button {
-    all: unset;
-    color: var(--secondary);
-    cursor: pointer;
+  all: unset;
+  color: var(--secondary);
+  cursor: pointer;
+}
+
+.ai-icon {
+  font-size: 14px;
+}
+
+.ai-form .btn-dark:hover {
+  border-color: var(--primary) !important;
 }

@@ -1,0 +1,11 @@
+.add-contact {
+    border: none;
+    padding: 6px 8px;
+    background: var(--border);
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.add-contact svg {
+    font-size: 20px;
+}

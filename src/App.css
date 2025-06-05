@@ -55,3 +55,15 @@ ul {
     max-width: 100%;
     margin: auto;
 }
+
+.my-btn {
+    transition: var(--transition);
+    padding: 4px 8px;
+    border-radius: var(--radius);
+    background-color: var(--dark);
+    color: var(--light);
+}
+
+.my-btn:hover {
+  background-color: var(--primary);
+}
