@@ -1,0 +1,37 @@
+.ai-parser {
+  margin-bottom: 2rem;
+  padding: 20px;
+}
+
+.section-title {
+  color: var(--primary);
+  font-family: var(--headingsMainFont);
+  font-size: var(--headingsSize);
+  margin-bottom: 0.5rem;
+}
+
+.section-desc {
+  color: var(--secondary);
+  font-size: var(--ulSize);
+  margin-bottom: 1rem;
+}
+
+.ai-form {
+  position: relative;
+  padding-top: 40px;
+  max-width: 100%;
+  width: 100%;
+}
+
+.ai-form .btn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1;
+}
+
+.click-to-try button {
+    all: unset;
+    color: var(--secondary);
+    cursor: pointer;
+}
