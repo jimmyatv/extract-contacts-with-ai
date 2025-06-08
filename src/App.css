@@ -67,3 +67,15 @@ ul {
 .my-btn:hover {
   background-color: var(--primary);
 }
+
+.btn-primary {
+    background: var(--primary) !important;
+}
+
+.btn-outline-primary {
+    color: var(--primary) !important;
+}
+
+.text-primary {
+    color: var(--primary) !important;
+}

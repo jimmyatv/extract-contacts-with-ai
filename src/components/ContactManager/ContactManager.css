@@ -9,3 +9,33 @@
 .add-contact svg {
     font-size: 20px;
 }
+
+.search {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.search svg {
+    font-size: 18px;
+    margin-left: 16px;
+}
+
+.search input {
+    padding: 8px;
+    width: 100%;
+    border-radius: 4px;
+    outline: none;
+    border: 1px solid #e4e4e4;
+}
+
+.search input::placeholder {
+    padding-left: 22px;
+}
+
+.filter>button {
+    all: unset;
+    border: 1px solid #e4e4e4;
+    padding: 8px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
