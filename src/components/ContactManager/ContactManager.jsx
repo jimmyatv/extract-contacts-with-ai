@@ -23,7 +23,7 @@ const ContactManager = () => {
       })
   }, [])
 
-  // 🔍 Filter first, then paginate
+  // filter first, then paginate
   const filteredContacts = contactsData.filter((contact) =>
     contact.name.toLowerCase().includes(searchTerm.toLowerCase())
   )
@@ -132,7 +132,7 @@ const ContactManager = () => {
         </div>
       </div>
 
-      {/* Table */}
+      {/*desktop table */}
       <div className='contacts-tabele d-none d-md-block mt-4'>
         <table className='custom-table w-100'>
           <thead>
@@ -294,6 +294,44 @@ const ContactManager = () => {
             </div>
           </div>
         </div>
+      </div>
+      {/* mobile cards */}
+      <div className="mobile-cards d-block d-md-none">
+        {currentContacts.map((contact, idx) => {
+          return (
+            <div className='mobile-contacts '>
+              <p>{contact.id}</p>
+              <p>{contact.postId}</p>
+              <p>{contact.email}</p>
+              <p>{contact.name}</p>
+              <p>{contact.name}</p>
+              <p>{contact.name}</p>
+              {/* mobile buttons */}
+              <div className="mobile-buttons d-flex justify-content-between">
+                <button
+                  className='btn text-primary fs-5 me-2'
+                  data-bs-toggle='modal'
+                  data-bs-target='#editContactModal'
+                  onClick={() => {
+                    setSelectedContact(contact)
+                    setEditedContact({ ...contact })
+                  }}
+                >
+                  <FiEdit3 />
+                </button>
+                <button
+                  className='btn text-danger fs-5'
+                  data-bs-toggle='modal'
+                  data-bs-target='#confirmDeleteModal'
+                  onClick={() => setSelectedContact(contact)}
+                >
+                  <AiOutlineDelete />
+                </button>
+              </div>
+            </div>
+          )
+        })}
+
       </div>
     </section>
   )
