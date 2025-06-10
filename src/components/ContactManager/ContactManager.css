@@ -32,10 +32,41 @@
     padding-left: 22px;
 }
 
-.filter>button {
+.filter>button,
+.mobile-search>button {
     all: unset;
     border: 1px solid #e4e4e4;
     padding: 8px 10px;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.mobile-search {
+    display: none;
+}
+
+.mobile-cards {
+    display: flex;
+    gap: 10px;
+}
+
+.mobile-contacts {
+    width: 95%;
+}
+
+@media screen and (max-width: 768px) {
+    .desktop-search {
+        display: none;
+    }
+    .desktop-search.is-active {
+        display: block;
+    }
+
+    .mobile-search {
+        display: block;
+    }
+
+    .search svg {
+        margin-left: unset;
+    }
 }

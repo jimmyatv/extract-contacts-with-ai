@@ -5,6 +5,9 @@ import { IoFilterOutline } from 'react-icons/io5'
 import { LuSearch } from 'react-icons/lu'
 import { FiEdit3 } from 'react-icons/fi'
 import { AiOutlineDelete } from 'react-icons/ai'
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Slider from "react-slick";
 
 const ContactManager = () => {
   const [contactsData, setContactsData] = useState([])
@@ -14,8 +17,15 @@ const ContactManager = () => {
   const [selectedContact, setSelectedContact] = useState(null)
   const [editedContact, setEditedContact] = useState(null)
 
+  // mobile search 
+  const [mobileSearch, setMobileSearch] = useState(false);
+
+  const handleMobileSearch = () => {
+    setMobileSearch(!mobileSearch)
+  };
+
   useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/comments')
+    fetch('https://jsonplaceholder.typicode.com/users')
       .then((res) => res.json())
       .then((data) => {
         setContactsData(data)
@@ -69,7 +79,7 @@ const ContactManager = () => {
   return (
     <section className='contact-manager container'>
       <div className='contacts-header row'>
-        <div className='cm-left d-flex justify-content-between col-9'>
+        <div className='cm-left d-flex justify-content-between col-8'>
           <h4 className='fw-bold mb-0 d-flex align-items-center'>Contacts</h4>
           <button
             className='add-contact d-flex justify-content-between align-items-center radius'
@@ -80,24 +90,34 @@ const ContactManager = () => {
           </button>
         </div>
 
-        <div className='cm-right col-3 d-flex justify-content-between align-items-center mt-0'>
-          <div className='search position-relative w-100 me-2'>
-            <LuSearch
-              className='position-absolute top-50 translate-middle-y'
-              style={{ left: '10px', color: '#737373', pointerEvents: 'none' }}
-            />
-            <input
-              type='text'
-              placeholder='Search contacts'
-              className='form-control ps-5'
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+        <div className='cm-right col-4 d-flex justify-content-between align-items-center mt-0'>
+          <div className='search w-100 me-2'>
+            <div className={`desktop-search position-relative ${mobileSearch ? 'is-active' : ''}`}>
+              <LuSearch
+                className='position-absolute top-50 translate-middle-y'
+                style={{ left: '10px', color: '#737373', pointerEvents: 'none' }}
+              />
+              <input
+                type='text'
+                placeholder='Search'
+                className='form-control ps-5'
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
           </div>
-          <div className='filter'>
-            <button>
-              <IoFilterOutline />
-            </button>
+          {/* mobile search icon */}
+          <div className="main-mobile-wrapper d-flex">
+            <div className='mobile-search text-end me-2'>
+              <button onClick={handleMobileSearch} className={mobileSearch ? 'is-active' : ''}>
+                <LuSearch />
+              </button>
+            </div>
+            <div className='filter'>
+              <button>
+                <IoFilterOutline />
+              </button>
+            </div>
           </div>
         </div>
 
@@ -152,10 +172,10 @@ const ContactManager = () => {
                 <tr key={index}>
                   <td>{contact.id}</td>
                   <td>{contact.name}</td>
-                  <td>{contact.postId}</td>
+                  <td>{contact.phone}</td>
                   <td>{contact.email}</td>
-                  <td>{contact.id}</td>
-                  <td>{contact.body}</td>
+                  <td>{contact.company.name}</td>
+                  <td>/{contact.body}</td>
                   <td>
                     <button
                       className='btn text-primary fs-5 me-2'
@@ -295,44 +315,50 @@ const ContactManager = () => {
           </div>
         </div>
       </div>
-      {/* mobile cards */}
-      <div className="mobile-cards d-block d-md-none">
-        {currentContacts.map((contact, idx) => {
-          return (
-            <div className='mobile-contacts '>
-              <p>{contact.id}</p>
-              <p>{contact.postId}</p>
-              <p>{contact.email}</p>
-              <p>{contact.name}</p>
-              <p>{contact.name}</p>
-              <p>{contact.name}</p>
-              {/* mobile buttons */}
-              <div className="mobile-buttons d-flex justify-content-between">
+      {/* Mobile Cards with React Slick */}
+      <div className="mobile-cards d-block d-md-none mt-4">
+        <Slider
+          dots={true}
+          infinite={false}
+          speed={500}
+          slidesToShow={1}
+          slidesToScroll={1}
+          arrows={false}
+        >
+          {currentContacts.map((contact, idx) => (
+            <div className="mobile-contacts card p-3 mb-3 shadow-sm" key={idx}>
+              <p><strong>ID:</strong> {contact.id}</p>
+              <p><strong>Name:</strong> {contact.name}</p>
+              <p><strong>Email:</strong> {contact.email}</p>
+              <p><strong>Post ID:</strong> {contact.postId}</p>
+              <p><strong>Body:</strong> {contact.body}</p>
+
+              <div className="mobile-buttons d-flex justify-content-end mt-3">
                 <button
-                  className='btn text-primary fs-5 me-2'
-                  data-bs-toggle='modal'
-                  data-bs-target='#editContactModal'
+                  className="btn text-primary fs-5 me-3"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editContactModal"
                   onClick={() => {
-                    setSelectedContact(contact)
-                    setEditedContact({ ...contact })
+                    setSelectedContact(contact);
+                    setEditedContact({ ...contact });
                   }}
                 >
                   <FiEdit3 />
                 </button>
                 <button
-                  className='btn text-danger fs-5'
-                  data-bs-toggle='modal'
-                  data-bs-target='#confirmDeleteModal'
+                  className="btn text-danger fs-5"
+                  data-bs-toggle="modal"
+                  data-bs-target="#confirmDeleteModal"
                   onClick={() => setSelectedContact(contact)}
                 >
                   <AiOutlineDelete />
                 </button>
               </div>
             </div>
-          )
-        })}
-
+          ))}
+        </Slider>
       </div>
+
     </section>
   )
 }
