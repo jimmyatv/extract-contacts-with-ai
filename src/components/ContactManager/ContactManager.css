@@ -54,19 +54,41 @@
     width: 95%;
 }
 
-@media screen and (max-width: 768px) {
-    .desktop-search {
-        display: none;
-    }
-    .desktop-search.is-active {
-        display: block;
-    }
+/* .contacts-header {
+    z-index: 1;
+} */
 
+
+@media screen and (max-width: 768px) {
     .mobile-search {
         display: block;
     }
 
+    .search {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        transition: .3s linear;
+        opacity: 0;
+        margin: unset;
+        padding: 0px 12px;
+        visibility: hidden;
+        /* z-index: -1;         */
+    }
+
+    .search.is-active {
+        opacity: 1;
+        visibility: visible;
+        top: -48px;
+    }
+
     .search svg {
         margin-left: unset;
+    }
+
+    .mySwiper .swiper-pagination {
+        bottom: -7px !important;
+        
     }
 }

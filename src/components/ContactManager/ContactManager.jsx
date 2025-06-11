@@ -5,9 +5,10 @@ import { IoFilterOutline } from 'react-icons/io5'
 import { LuSearch } from 'react-icons/lu'
 import { FiEdit3 } from 'react-icons/fi'
 import { AiOutlineDelete } from 'react-icons/ai'
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import Slider from "react-slick";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
+import { Pagination, Virtual } from "swiper/modules";
 
 const ContactManager = () => {
   const [contactsData, setContactsData] = useState([])
@@ -78,8 +79,8 @@ const ContactManager = () => {
 
   return (
     <section className='contact-manager container'>
-      <div className='contacts-header row'>
-        <div className='cm-left d-flex justify-content-between col-8'>
+      <div className='contacts-header position-relative row'>
+        <div className='cm-left d-flex justify-content-between col-9 col-md-8 col-sm-10'>
           <h4 className='fw-bold mb-0 d-flex align-items-center'>Contacts</h4>
           <button
             className='add-contact d-flex justify-content-between align-items-center radius'
@@ -90,9 +91,9 @@ const ContactManager = () => {
           </button>
         </div>
 
-        <div className='cm-right col-4 d-flex justify-content-between align-items-center mt-0'>
-          <div className='search w-100 me-2'>
-            <div className={`desktop-search position-relative ${mobileSearch ? 'is-active' : ''}`}>
+        <div className='cm-right col-3 col-md-4 col-sm-2 d-flex justify-content-end align-items-center mt-0'>
+          <div className={`search w-100 me-2 ${mobileSearch ? 'is-active' : ''}`}>
+            <div className={`desktop-search position-relative`}>
               <LuSearch
                 className='position-absolute top-50 translate-middle-y'
                 style={{ left: '10px', color: '#737373', pointerEvents: 'none' }}
@@ -315,48 +316,59 @@ const ContactManager = () => {
           </div>
         </div>
       </div>
-      {/* Mobile Cards with React Slick */}
+      {/* Mobile Cards with React swiper */}
       <div className="mobile-cards d-block d-md-none mt-4">
-        <Slider
-          dots={true}
-          infinite={false}
-          speed={500}
-          slidesToShow={1}
-          slidesToScroll={1}
-          arrows={false}
+        <Swiper
+          slidesPerView={2}
+          spaceBetween={20}
+          pagination={{ clickable: true }}
+          modules={[Pagination, Virtual]} 
+          virtual 
+          breakpoints={{
+            0: {
+              slidesPerView: 1,
+            },
+            568: {
+              slidesPerView: 2,
+            },
+          }}
+          className="mySwiper"
         >
           {currentContacts.map((contact, idx) => (
-            <div className="mobile-contacts card p-3 mb-3 shadow-sm" key={idx}>
-              <p><strong>ID:</strong> {contact.id}</p>
-              <p><strong>Name:</strong> {contact.name}</p>
-              <p><strong>Email:</strong> {contact.email}</p>
-              <p><strong>Post ID:</strong> {contact.postId}</p>
-              <p><strong>Body:</strong> {contact.body}</p>
+            <SwiperSlide key={idx} virtualIndex={idx}> 
+              <div className="mobile-contacts card p-3 mb-3 shadow-sm">
+                <p><strong>ID:</strong> {contact.id}</p>
+                <p><strong>Name:</strong> {contact.name}</p>
+                <p><strong>Email:</strong> {contact.email}</p>
+                <p><strong>Company:</strong> {contact.postId}</p>
+                <p><strong>Notes:</strong> {contact.body}</p>
 
-              <div className="mobile-buttons d-flex justify-content-end mt-3">
-                <button
-                  className="btn text-primary fs-5 me-3"
-                  data-bs-toggle="modal"
-                  data-bs-target="#editContactModal"
-                  onClick={() => {
-                    setSelectedContact(contact);
-                    setEditedContact({ ...contact });
-                  }}
-                >
-                  <FiEdit3 />
-                </button>
-                <button
-                  className="btn text-danger fs-5"
-                  data-bs-toggle="modal"
-                  data-bs-target="#confirmDeleteModal"
-                  onClick={() => setSelectedContact(contact)}
-                >
-                  <AiOutlineDelete />
-                </button>
+                <div className="mobile-buttons d-flex justify-content-end mt-3">
+                  <button
+                    className="btn text-primary fs-5 me-3"
+                    data-bs-toggle="modal"
+                    data-bs-target="#editContactModal"
+                    onClick={() => {
+                      setSelectedContact(contact);
+                      setEditedContact({ ...contact });
+                    }}
+                  >
+                    <FiEdit3 />
+                  </button>
+                  <button
+                    className="btn text-danger fs-5"
+                    data-bs-toggle="modal"
+                    data-bs-target="#confirmDeleteModal"
+                    onClick={() => setSelectedContact(contact)}
+                  >
+                    <AiOutlineDelete />
+                  </button>
+                </div>
               </div>
-            </div>
+            </SwiperSlide>
           ))}
-        </Slider>
+        </Swiper>
+
       </div>
 
     </section>
