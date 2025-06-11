@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/extract-contacts-with-ai/static/css/main.67d7b7c2.css",
+    "main.js": "/extract-contacts-with-ai/static/js/main.65664faf.js",
+    "static/js/453.dae19cdc.chunk.js": "/extract-contacts-with-ai/static/js/453.dae19cdc.chunk.js",
+    "index.html": "/extract-contacts-with-ai/index.html",
+    "main.67d7b7c2.css.map": "/extract-contacts-with-ai/static/css/main.67d7b7c2.css.map",
+    "main.65664faf.js.map": "/extract-contacts-with-ai/static/js/main.65664faf.js.map",
+    "453.dae19cdc.chunk.js.map": "/extract-contacts-with-ai/static/js/453.dae19cdc.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.67d7b7c2.css",
+    "static/js/main.65664faf.js"
+  ]
+}
