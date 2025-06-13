@@ -18,6 +18,7 @@ const ContactManager = () => {
   const [selectedContact, setSelectedContact] = useState(null)
   const [editedContact, setEditedContact] = useState(null)
 
+
   // mobile search 
   const [mobileSearch, setMobileSearch] = useState(false);
 
@@ -26,7 +27,7 @@ const ContactManager = () => {
   };
 
   useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/users')
+    fetch('http://localhost:8000/api/contacts')
       .then((res) => res.json())
       .then((data) => {
         setContactsData(data)
@@ -34,9 +35,87 @@ const ContactManager = () => {
       })
   }, [])
 
+
+  const createContact = async (e) => {
+    e.preventDefault();
+
+    const form = e.target;
+    const newContact = {
+      first_name: form.first_name.value,
+      last_name: form.last_name.value,
+      phone: form.phone.value,
+      email: form.email.value,
+      company: form.company.value,
+    };
+
+    try {
+      const response = await fetch('http://localhost:8000/api/add_contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(newContact),
+      });
+
+      const result = await response.json();
+      console.log(result);
+
+      setContactsData(prev => [...prev, result]);
+      form.reset();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const edit_contact = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('http://localhost:8000/api/edit_contact', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(editedContact),
+      });
+
+      const result = await response.json();
+      console.log(result);
+      setContactsData(prevContacts =>
+        prevContacts.map(contact =>
+          contact.id === result.id ? result : contact
+        )
+      );
+      
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+const deleteContact = async () => {
+  try {
+    await fetch(`http://localhost:8000/api/delete_contact/${selectedContact.id}`, {
+      method: 'PUT',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+
+    setContactsData(prev =>
+      prev.filter(contact => contact.id !== selectedContact.id)
+    );
+
+  } catch (error) {
+    console.error('Delete error:', error);
+  }
+};
+
+
   // filter first, then paginate
   const filteredContacts = contactsData.filter((contact) =>
-    contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+    contact.first_name.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   const indexOfLastContact = currentPage * contactsPerPage
@@ -130,24 +209,24 @@ const ContactManager = () => {
                 <h5 className='modal-title'>Add Contact</h5>
                 <button type='button' className='btn-close' data-bs-dismiss='modal'></button>
               </div>
-              <div className='modal-body'>
-                <form>
-                  <input className='form-control mb-2' placeholder='First Name' />
-                  <input className='form-control mb-2' placeholder='Last Name' />
-                  <input className='form-control mb-2' placeholder='Phone' />
-                  <input className='form-control mb-2' placeholder='Email' />
-                  <input className='form-control mb-2' placeholder='Company' />
-                  <textarea className='form-control mb-3' rows='3' placeholder='Notes'></textarea>
-                </form>
-              </div>
-              <div className='modal-footer'>
-                <button type='button' className='btn btn-secondary' data-bs-dismiss='modal'>
-                  Cancel
-                </button>
-                <button type='button' className='btn btn-primary'>
-                  Add Contact
-                </button>
-              </div>
+              <form method="POST" onSubmit={createContact}>
+                <div className='modal-body'>
+                  <input name="first_name" className='form-control mb-2' placeholder='First Name' />
+                  <input name="last_name" className='form-control mb-2' placeholder='Last Name' />
+                  <input name="phone" className='form-control mb-2' placeholder='Phone' />
+                  <input name="email" className='form-control mb-2' placeholder='Email' />
+                  <input name="company" className='form-control mb-2' placeholder='Company' />
+
+                </div>
+                <div className='modal-footer'>
+                  <button type='button' className='btn btn-secondary' data-bs-dismiss='modal'>
+                    Cancel
+                  </button>
+                  <button type='submit' className='btn btn-primary'>
+                    Add Contact
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
@@ -158,12 +237,12 @@ const ContactManager = () => {
         <table className='custom-table w-100'>
           <thead>
             <tr>
+              <th>ID</th>
               <th>First name</th>
               <th>Last name</th>
               <th>Phone</th>
               <th>Email</th>
               <th>Company</th>
-              <th>Notes</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -172,11 +251,11 @@ const ContactManager = () => {
               currentContacts.map((contact, index) => (
                 <tr key={index}>
                   <td>{contact.id}</td>
-                  <td>{contact.name}</td>
+                  <td>{contact.first_name}</td>
+                  <td>{contact.last_name}</td>
                   <td>{contact.phone}</td>
                   <td>{contact.email}</td>
-                  <td>{contact.company.name}</td>
-                  <td>/{contact.body}</td>
+                  <td>{contact.company}</td>
                   <td>
                     <button
                       className='btn text-primary fs-5 me-2'
@@ -193,6 +272,7 @@ const ContactManager = () => {
                       className='btn text-danger fs-5'
                       data-bs-toggle='modal'
                       data-bs-target='#confirmDeleteModal'
+                      id={contact.id}
                       onClick={() => setSelectedContact(contact)}
                     >
                       <AiOutlineDelete />
@@ -248,7 +328,12 @@ const ContactManager = () => {
               <button type='button' className='btn btn-secondary px-4' data-bs-dismiss='modal'>
                 No
               </button>
-              <button type='button' className='btn btn-danger px-4'>
+              <button
+                type='button'
+                className='btn btn-danger px-4'
+                onClick={deleteContact}
+                data-bs-dismiss='modal'
+              >
                 Yes
               </button>
             </div>
@@ -264,19 +349,19 @@ const ContactManager = () => {
               <h5 className='modal-title'>Edit Contact</h5>
               <button type='button' className='btn-close' data-bs-dismiss='modal'></button>
             </div>
-            <div className='modal-body'>
-              <form>
+            <form onSubmit={edit_contact}>
+              <div className='modal-body'>
                 <input
                   className='form-control mb-2'
                   placeholder='First Name'
-                  value={editedContact?.firstName || ''}
-                  onChange={(e) => setEditedContact({ ...editedContact, firstName: e.target.value })}
+                  value={editedContact?.first_name || ''}
+                  onChange={(e) => setEditedContact({ ...editedContact, first_name: e.target.value })}
                 />
                 <input
                   className='form-control mb-2'
                   placeholder='Last Name'
-                  value={editedContact?.lastName || ''}
-                  onChange={(e) => setEditedContact({ ...editedContact, lastName: e.target.value })}
+                  value={editedContact?.last_name || ''}
+                  onChange={(e) => setEditedContact({ ...editedContact, last_name: e.target.value })}
                 />
                 <input
                   className='form-control mb-2'
@@ -296,23 +381,16 @@ const ContactManager = () => {
                   value={editedContact?.company || ''}
                   onChange={(e) => setEditedContact({ ...editedContact, company: e.target.value })}
                 />
-                <textarea
-                  className='form-control mb-3'
-                  rows='3'
-                  placeholder='Notes'
-                  value={editedContact?.notes || ''}
-                  onChange={(e) => setEditedContact({ ...editedContact, notes: e.target.value })}
-                />
-              </form>
-            </div>
-            <div className='modal-footer d-flex justify-content-center'>
-              <button type='button' className='btn btn-secondary px-4' data-bs-dismiss='modal'>
-                Cancel
-              </button>
-              <button type='button' className='btn btn-primary px-4'>
-                Save
-              </button>
-            </div>
+              </div>
+              <div className='modal-footer d-flex justify-content-center'>
+                <button type='button' className='btn btn-secondary px-4' data-bs-dismiss='modal'>
+                  Cancel
+                </button>
+                <button type='submit' className='btn btn-primary px-4'>
+                  Save
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -322,8 +400,8 @@ const ContactManager = () => {
           slidesPerView={2}
           spaceBetween={20}
           pagination={{ clickable: true }}
-          modules={[Pagination, Virtual]} 
-          virtual 
+          modules={[Pagination, Virtual]}
+          virtual
           breakpoints={{
             0: {
               slidesPerView: 1,
@@ -335,13 +413,14 @@ const ContactManager = () => {
           className="mySwiper"
         >
           {currentContacts.map((contact, idx) => (
-            <SwiperSlide key={idx} virtualIndex={idx}> 
+            <SwiperSlide key={idx} virtualIndex={idx}>
               <div className="mobile-contacts card p-3 mb-3 shadow-sm">
                 <p><strong>ID:</strong> {contact.id}</p>
-                <p><strong>Name:</strong> {contact.name}</p>
+                <p><strong>First name:</strong> {contact.first_name}</p>
+                <p><strong>Last name:</strong> {contact.last_name}</p>
+                <p><strong>Phone:</strong> {contact.phone}</p>
                 <p><strong>Email:</strong> {contact.email}</p>
-                <p><strong>Company:</strong> {contact.postId}</p>
-                <p><strong>Notes:</strong> {contact.body}</p>
+                <p><strong>Company:</strong> {contact.company}</p>
 
                 <div className="mobile-buttons d-flex justify-content-end mt-3">
                   <button
@@ -359,6 +438,7 @@ const ContactManager = () => {
                     className="btn text-danger fs-5"
                     data-bs-toggle="modal"
                     data-bs-target="#confirmDeleteModal"
+                    id={contact.id}
                     onClick={() => setSelectedContact(contact)}
                   >
                     <AiOutlineDelete />
