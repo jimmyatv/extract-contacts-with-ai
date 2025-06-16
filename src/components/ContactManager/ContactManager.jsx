@@ -36,6 +36,7 @@ const ContactManager = () => {
   }, [])
 
 
+  //Create contact/Add contact
   const createContact = async (e) => {
     e.preventDefault();
 
@@ -59,15 +60,17 @@ const ContactManager = () => {
       });
 
       const result = await response.json();
-      console.log(result);
-
-      setContactsData(prev => [...prev, result]);
+      setContactsData(prev => [result, ...prev]);
+      setCurrentPage(1);
       form.reset();
+
     } catch (error) {
       console.log(error);
     }
   };
 
+
+  //Edit contact
   const edit_contact = async (e) => {
     e.preventDefault();
 
@@ -88,35 +91,41 @@ const ContactManager = () => {
           contact.id === result.id ? result : contact
         )
       );
-      
+
     } catch (error) {
       console.log(error);
     }
   };
 
-const deleteContact = async () => {
-  try {
-    await fetch(`http://localhost:8000/api/delete_contact/${selectedContact.id}`, {
-      method: 'PUT',
-      headers: {
-        'Accept': 'application/json',
-      },
-    });
+  //Delete contact
+  const deleteContact = async () => {
+    try {
+      await fetch(`http://localhost:8000/api/delete_contact/${selectedContact.id}`, {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
 
-    setContactsData(prev =>
-      prev.filter(contact => contact.id !== selectedContact.id)
-    );
+      setContactsData(prev =>
+        prev.filter(contact => contact.id !== selectedContact.id)
+      );
 
-  } catch (error) {
-    console.error('Delete error:', error);
-  }
-};
+    } catch (error) {
+      console.error('Delete error:', error);
+    }
+  };
 
 
   // filter first, then paginate
-  const filteredContacts = contactsData.filter((contact) =>
-    contact.first_name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredContacts = contactsData.filter(contact =>
+    (contact.first_name?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (contact.last_name?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (contact.phone?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (contact.email?.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (contact.company?.toLowerCase().includes(searchTerm.toLowerCase()))
   )
+
 
   const indexOfLastContact = currentPage * contactsPerPage
   const indexOfFirstContact = indexOfLastContact - contactsPerPage
@@ -222,7 +231,7 @@ const deleteContact = async () => {
                   <button type='button' className='btn btn-secondary' data-bs-dismiss='modal'>
                     Cancel
                   </button>
-                  <button type='submit' className='btn btn-primary'>
+                  <button type='submit' className='btn btn-primary' data-bs-dismiss='modal'>
                     Add Contact
                   </button>
                 </div>
@@ -386,7 +395,7 @@ const deleteContact = async () => {
                 <button type='button' className='btn btn-secondary px-4' data-bs-dismiss='modal'>
                   Cancel
                 </button>
-                <button type='submit' className='btn btn-primary px-4'>
+                <button type='submit' className='btn btn-primary px-4' data-bs-dismiss='modal'>
                   Save
                 </button>
               </div>

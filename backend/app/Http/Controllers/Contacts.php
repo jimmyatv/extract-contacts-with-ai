@@ -27,7 +27,6 @@ class Contacts extends Controller
 
     public function parse_ai(Request $request) {
         $data = $request->all();
-        var_dump($data);
         DB::table('contacts')->insert($data);
     }
 }
