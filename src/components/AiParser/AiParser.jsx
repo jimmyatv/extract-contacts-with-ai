@@ -43,7 +43,7 @@ const AiParser = () => {
   return (
     <section className="ai-parser container">
       <div className='text-center'>
-        <h2>Extract contacts with AI</h2>
+        <h1>Extract contacts with AI</h1>
         <p>Automatically extract and organize contact details from your meeting notes</p>
       </div>
 
@@ -55,7 +55,7 @@ const AiParser = () => {
           value={note}
           onChange={e => setNote(e.target.value)}
         />
-        <button onClick={handleParse} className="my-btn"><BsStars className='ai-icon me-1' />Extract contact</button>
+        <button onClick={handleParse} className="my-btn" aria-label='Parse AI'><BsStars className='ai-icon me-1' />Extract contact</button>
       </div>
 
       {showExample && (
@@ -64,6 +64,7 @@ const AiParser = () => {
           <button
             className='border border-secondary rounded-2 p-2'
             onClick={handleExampleClick}
+            aria-label='Show example'
           >
             {exampleNote}
           </button>

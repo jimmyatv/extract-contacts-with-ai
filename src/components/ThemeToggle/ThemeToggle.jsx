@@ -19,7 +19,7 @@ const ThemeToggle = () => {
 
     return (
         <div className="darkLight-mode">
-            <button className="btn btn-outline-secondary d-flex align-items-center gap-2" onClick={toggleTheme}>
+            <button className="btn btn-outline-secondary d-flex align-items-center gap-2" onClick={toggleTheme} aria-label='Theme toggler'>
                 {theme === 'light' ? (
                     <>
                         <i className="bi bi-moon-fill"></i>

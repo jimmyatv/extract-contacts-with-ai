@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './ContactManager.css'
 import { IoMdAddCircleOutline } from 'react-icons/io'
 import { IoFilterOutline } from 'react-icons/io5'
@@ -18,6 +18,16 @@ const ContactManager = () => {
   const contactsPerPage = 5
   const [selectedContact, setSelectedContact] = useState(null)
   const [editedContact, setEditedContact] = useState(null)
+
+  const modalRef = useRef(null);
+  const bsModal = useRef(null);
+
+  // Close modal when adding a new contact
+  useEffect(() => {
+    if (modalRef.current) {
+      bsModal.current = new window.bootstrap.Modal(modalRef.current);
+    }
+  }, []);
 
 
   // mobile search 
@@ -65,6 +75,8 @@ const ContactManager = () => {
       setCurrentPage(1);
       setContactsData(prev => [result, ...prev]);
       form.reset();
+
+      bsModal.current.hide();
 
     } catch (error) {
       console.log(error);
@@ -171,11 +183,12 @@ const ContactManager = () => {
     <section className='contact-manager container'>
       <div className='contacts-header position-relative row'>
         <div className='cm-left d-flex justify-content-between col-9 col-md-8 col-sm-10'>
-          <h4 className='fw-bold mb-0 d-flex align-items-center'>Contacts</h4>
+          <h2 className='fw-bold mb-0 d-flex align-items-center'>Contacts</h2>
           <button
             className='add-contact d-flex justify-content-between align-items-center radius'
             data-bs-toggle='modal'
             data-bs-target='#addContactModal'
+            aria-label='Add contact'
           >
             <IoMdAddCircleOutline className='me-1' /> Add manually
           </button>
@@ -200,12 +213,12 @@ const ContactManager = () => {
           {/* mobile search icon */}
           <div className="main-mobile-wrapper d-flex">
             <div className='mobile-search text-end me-2'>
-              <button onClick={handleMobileSearch} className={mobileSearch ? 'is-active' : ''}>
+              <button onClick={handleMobileSearch} className={mobileSearch ? 'is-active' : ''} aria-label='Search'>
                 <LuSearch />
               </button>
             </div>
             <div className='filter'>
-              <button>
+              <button aria-label='Filter'>
                 <IoFilterOutline />
               </button>
             </div>
@@ -213,27 +226,27 @@ const ContactManager = () => {
         </div>
 
         {/* Add Contact Modal */}
-        <div className='modal fade' id='addContactModal' tabIndex='-1' aria-hidden='true'>
+        <div className='modal fade' id='addContactModal' tabIndex='-1' aria-hidden='true' ref={modalRef}>
           <div className='modal-dialog modal-dialog-centered'>
             <div className='modal-content'>
               <div className='modal-header'>
                 <h5 className='modal-title'>Add Contact</h5>
-                <button type='button' className='btn-close' data-bs-dismiss='modal'></button>
+                <button type='button' className='btn-close' data-bs-dismiss='modal' aria-label='Add contact'></button>
               </div>
               <form method="POST" onSubmit={createContact}>
                 <div className='modal-body'>
-                  <input name="first_name" className='form-control mb-2' placeholder='First Name' />
-                  <input name="last_name" className='form-control mb-2' placeholder='Last Name' />
-                  <input name="phone" className='form-control mb-2' placeholder='Phone' />
-                  <input name="email" className='form-control mb-2' placeholder='Email' />
-                  <input name="company" className='form-control mb-2' placeholder='Company' />
+                  <input type="text" name="first_name" className='form-control mb-2' placeholder='First Name' required />
+                  <input type="text" name="last_name" className='form-control mb-2' placeholder='Last Name' required />
+                  <input type="text" name="phone" className='form-control mb-2' placeholder='Phone' />
+                  <input type="email" name="email" className='form-control mb-2' placeholder='Email' required />
+                  <input type="text" name="company" className='form-control mb-2' placeholder='Company' />
 
                 </div>
                 <div className='modal-footer'>
-                  <button type='button' className='btn btn-secondary' data-bs-dismiss='modal'>
+                  <button type='button' className='btn btn-secondary' data-bs-dismiss='modal' aria-label='Close modal'>
                     Cancel
                   </button>
-                  <button type='submit' className='btn btn-primary' data-bs-dismiss='modal'>
+                  <button type='submit' className='btn btn-primary' aria-label='Add contact'>
                     Add Contact
                   </button>
                 </div>
@@ -276,6 +289,7 @@ const ContactManager = () => {
                         setSelectedContact(contact)
                         setEditedContact({ ...contact })
                       }}
+                      aria-label='Edit contact'
                     >
                       <FiEdit3 />
                     </button>
@@ -285,6 +299,7 @@ const ContactManager = () => {
                       data-bs-target='#confirmDeleteModal'
                       id={contact.id}
                       onClick={() => setSelectedContact(contact)}
+                      aria-label='Delete contact'
                     >
                       <AiOutlineDelete />
                     </button>
@@ -318,6 +333,7 @@ const ContactManager = () => {
                   key={i}
                   className={`page-btn btn ${currentPage === btn ? 'btn-primary' : 'btn-outline-primary'} mx-1`}
                   onClick={() => handlePageChange(btn)}
+                  aria-label='Current page'
                 >
                   {btn}
                 </button>
@@ -334,10 +350,10 @@ const ContactManager = () => {
           <div className='modal-content'>
             <div className='modal-header'>
               <h5 className='modal-title'>Are you sure you want to delete contact?</h5>
-              <button type='button' className='btn-close' data-bs-dismiss='modal'></button>
+              <button type='button' className='btn-close' data-bs-dismiss='modal' aria-label='Close modal'></button>
             </div>
             <div className='modal-footer d-flex justify-content-center'>
-              <button type='button' className='btn btn-secondary px-4' data-bs-dismiss='modal'>
+              <button type='button' className='btn btn-secondary px-4' data-bs-dismiss='modal' aria-label='Close modal'>
                 No
               </button>
               <button
@@ -345,6 +361,7 @@ const ContactManager = () => {
                 className='btn btn-danger px-4'
                 onClick={deleteContact}
                 data-bs-dismiss='modal'
+                aria-label='Delete contact'
               >
                 Yes
               </button>
@@ -359,7 +376,7 @@ const ContactManager = () => {
           <div className='modal-content'>
             <div className='modal-header'>
               <h5 className='modal-title'>Edit Contact</h5>
-              <button type='button' className='btn-close' data-bs-dismiss='modal'></button>
+              <button type='button' className='btn-close' data-bs-dismiss='modal' aria-label='Close modal'></button>
             </div>
             <form onSubmit={edit_contact}>
               <div className='modal-body'>
@@ -395,10 +412,10 @@ const ContactManager = () => {
                 />
               </div>
               <div className='modal-footer d-flex justify-content-center'>
-                <button type='button' className='btn btn-secondary px-4' data-bs-dismiss='modal'>
+                <button type='button' className='btn btn-secondary px-4' data-bs-dismiss='modal' aria-label='Close modal'>
                   Cancel
                 </button>
-                <button type='submit' className='btn btn-primary px-4' data-bs-dismiss='modal'>
+                <button type='submit' className='btn btn-primary px-4' data-bs-dismiss='modal' aria-label='Edit contact'>
                   Save
                 </button>
               </div>
@@ -443,6 +460,7 @@ const ContactManager = () => {
                       setSelectedContact(contact);
                       setEditedContact({ ...contact });
                     }}
+                    aria-label='Open edit contact modal'
                   >
                     <FiEdit3 />
                   </button>
@@ -452,6 +470,7 @@ const ContactManager = () => {
                     data-bs-target="#confirmDeleteModal"
                     id={contact.id}
                     onClick={() => setSelectedContact(contact)}
+                    aria-label='Open delete contact modal'
                   >
                     <AiOutlineDelete />
                   </button>
