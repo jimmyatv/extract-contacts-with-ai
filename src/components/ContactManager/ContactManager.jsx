@@ -15,7 +15,7 @@ const ContactManager = () => {
   const [contactsData, setContactsData] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const contactsPerPage = 5
+  const contactsPerPage = 10
   const [selectedContact, setSelectedContact] = useState(null)
   const [editedContact, setEditedContact] = useState(null)
 
@@ -112,24 +112,24 @@ const ContactManager = () => {
   };
 
   //Delete contact
-  const deleteContact = async () => {
-    try {
-      await fetch(`http://localhost:8000/api/delete_contact/${selectedContact.id}`, {
-        method: 'PUT',
-        headers: {
-          'Accept': 'application/json',
-        },
-      });
+    const deleteContact = async () => {
+      try {
+        await fetch(`http://localhost:8000/api/delete_contact/${selectedContact.id}`, {
+          method: 'PUT',
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
 
-      toast.success("Contact has been deleted successfully");
-      setContactsData(prev =>
-        prev.filter(contact => contact.id !== selectedContact.id)
-      );
+        toast.success("Contact has been deleted successfully");
+        setContactsData(prev =>
+          prev.filter(contact => contact.id !== selectedContact.id)
+        );
 
-    } catch (error) {
-      console.error('Delete error:', error);
-    }
-  };
+      } catch (error) {
+        console.error('Delete error:', error);
+      }
+    };
 
 
   // filter first, then paginate
@@ -154,7 +154,7 @@ const ContactManager = () => {
   const getPaginationButtons = () => {
     const buttons = []
 
-    if (totalPages <= 7) {
+    if (totalPages <= 5) {
       for (let i = 1; i <= totalPages; i++) {
         buttons.push(i)
       }
@@ -177,6 +177,43 @@ const ContactManager = () => {
 
     return buttons
   }
+
+  // Handle filter
+  const handleFilter = () => {
+  const noPhone = document.getElementById('noPhone').checked;
+  const noCompany = document.getElementById('noCompany').checked;
+
+  if (!noPhone && !noCompany) {
+    setContactsData(contactsData);
+    return;
+  }
+
+  const filtered = contactsData.filter(contact => {
+    let phoneCheck = true;
+    let companyCheck = true;
+
+    if (noPhone) {
+      phoneCheck = !contact.phone || contact.phone.trim() === '';
+    }
+    if (noCompany) {
+      companyCheck = !contact.company || contact.company.trim() === '';
+    }
+
+    // Ako su čekirana oba, traži one koji zadovoljavaju bar jedan uslov (ili oba)
+    if (noPhone && noCompany) {
+      return phoneCheck || companyCheck;
+    }
+
+    // Ako je čekiran samo jedan filter, vraća true samo ako ispunjava uslov
+    return phoneCheck && companyCheck;
+  });
+
+  setContactsData(filtered);
+};
+
+
+
+
 
 
   return (
@@ -218,7 +255,13 @@ const ContactManager = () => {
               </button>
             </div>
             <div className='filter'>
-              <button aria-label='Filter'>
+              <button
+                type='button'
+                className='btn btn-outline-secondary'
+                data-bs-toggle='modal'
+                data-bs-target='#filterModal'
+                aria-label='Filter'
+              >
                 <IoFilterOutline />
               </button>
             </div>
@@ -369,6 +412,44 @@ const ContactManager = () => {
           </div>
         </div>
       </div>
+
+      {/* Filter modal */}
+      <div className="modal fade" id="filterModal" tabIndex="-1" aria-hidden="true">
+        <div className="modal-dialog">
+          <div className="modal-content">
+
+            <div className="modal-header">
+              <h5 className="modal-title">Filter Users</h5>
+              <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div className="modal-body">
+              <form id="filterForm">
+                <div className="form-check">
+                  <input className="form-check-input" type="checkbox" id="noPhone" />
+                  <label className="form-check-label" htmlFor="noPhone">
+                    Users without phone number
+                  </label>
+                </div>
+
+                <div className="form-check">
+                  <input className="form-check-input" type="checkbox" id="noCompany" />
+                  <label className="form-check-label" htmlFor="noCompany">
+                    Users without company
+                  </label>
+                </div>
+              </form>
+            </div>
+
+            <div className="modal-footer">
+              <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" className="btn btn-primary" onClick={handleFilter}>Apply Filters</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
 
       {/* Edit Modal */}
       <div className='modal fade' id='editContactModal' tabIndex='-1' aria-hidden='true'>
