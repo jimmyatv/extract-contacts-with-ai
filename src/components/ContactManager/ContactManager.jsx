@@ -12,8 +12,10 @@ import { Pagination, Virtual } from "swiper/modules";
 import { toast } from 'react-toastify'
 
 const ContactManager = () => {
-  const [contactsData, setContactsData] = useState([])
-  const [searchTerm, setSearchTerm] = useState('')
+  const [contactsData, setContactsData] = useState([]);
+  const [allContacts, setAllContacts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isAdding, setIsAdding] = useState(false);
   const [currentPage, setCurrentPage] = useState(1)
   const contactsPerPage = 10
   const [selectedContact, setSelectedContact] = useState(null)
@@ -42,14 +44,18 @@ const ContactManager = () => {
     fetch('http://localhost:8000/api/contacts')
       .then((res) => res.json())
       .then((data) => {
-        setContactsData(data)
+        setContactsData(data);
+        setAllContacts(data);
       })
   }, [])
 
 
-  //Create contact/Add contact
+  //Create/Add contact
   const createContact = async (e) => {
     e.preventDefault();
+
+    if (isAdding) return;
+    setIsAdding(true);
 
     const form = e.target;
     const newContact = {
@@ -65,7 +71,7 @@ const ContactManager = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify(newContact),
       });
@@ -75,13 +81,15 @@ const ContactManager = () => {
       setCurrentPage(1);
       setContactsData(prev => [result, ...prev]);
       form.reset();
-
       bsModal.current.hide();
-
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    } finally {
+      setIsAdding(false);
     }
   };
+
+
 
 
   //Edit contact
@@ -112,24 +120,24 @@ const ContactManager = () => {
   };
 
   //Delete contact
-    const deleteContact = async () => {
-      try {
-        await fetch(`http://localhost:8000/api/delete_contact/${selectedContact.id}`, {
-          method: 'PUT',
-          headers: {
-            'Accept': 'application/json',
-          },
-        });
+  const deleteContact = async () => {
+    try {
+      await fetch(`http://localhost:8000/api/delete_contact/${selectedContact.id}`, {
+        method: 'PUT',
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
 
-        toast.success("Contact has been deleted successfully");
-        setContactsData(prev =>
-          prev.filter(contact => contact.id !== selectedContact.id)
-        );
+      toast.success("Contact has been deleted successfully");
+      setContactsData(prev =>
+        prev.filter(contact => contact.id !== selectedContact.id)
+      );
 
-      } catch (error) {
-        console.error('Delete error:', error);
-      }
-    };
+    } catch (error) {
+      console.error('Delete error:', error);
+    }
+  };
 
 
   // filter first, then paginate
@@ -180,36 +188,33 @@ const ContactManager = () => {
 
   // Handle filter
   const handleFilter = () => {
-  const noPhone = document.getElementById('noPhone').checked;
-  const noCompany = document.getElementById('noCompany').checked;
+    const noPhone = document.getElementById('noPhone').checked;
+    const noCompany = document.getElementById('noCompany').checked;
 
-  if (!noPhone && !noCompany) {
-    setContactsData(contactsData);
-    return;
-  }
+    setCurrentPage(1);
 
-  const filtered = contactsData.filter(contact => {
-    let phoneCheck = true;
-    let companyCheck = true;
-
-    if (noPhone) {
-      phoneCheck = !contact.phone || contact.phone.trim() === '';
-    }
-    if (noCompany) {
-      companyCheck = !contact.company || contact.company.trim() === '';
+    if (!noPhone && !noCompany) {
+      setContactsData(allContacts);
+      return;
     }
 
-    // Ako su čekirana oba, traži one koji zadovoljavaju bar jedan uslov (ili oba)
-    if (noPhone && noCompany) {
-      return phoneCheck || companyCheck;
-    }
+    const filtered = allContacts.filter(contact => {
+      const phoneMissing = !contact.phone?.trim();
+      const companyMissing = !contact.company?.trim();
 
-    // Ako je čekiran samo jedan filter, vraća true samo ako ispunjava uslov
-    return phoneCheck && companyCheck;
-  });
+      if (noPhone && noCompany) {
+        return phoneMissing || companyMissing;
+      }
 
-  setContactsData(filtered);
-};
+      if (noPhone) return phoneMissing;
+      if (noCompany) return companyMissing;
+
+      return true;
+    });
+
+    setContactsData(filtered);
+  };
+
 
 
 
@@ -286,11 +291,13 @@ const ContactManager = () => {
 
                 </div>
                 <div className='modal-footer'>
-                  <button type='button' className='btn btn-secondary' data-bs-dismiss='modal' aria-label='Close modal'>
-                    Cancel
-                  </button>
-                  <button type='submit' className='btn btn-primary' aria-label='Add contact'>
-                    Add Contact
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    aria-label="Add contact"
+                    disabled={isAdding}
+                  >
+                    {isAdding ? 'Adding...' : 'Add Contact'}
                   </button>
                 </div>
               </form>
@@ -504,6 +511,7 @@ const ContactManager = () => {
           </div>
         </div>
       </div>
+      
       {/* Mobile Cards with React swiper */}
       <div className="mobile-cards d-block d-md-none mt-4">
         <Swiper
