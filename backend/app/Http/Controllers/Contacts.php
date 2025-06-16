@@ -25,6 +25,7 @@ class Contacts extends Controller
         return response()->json($contact);
     }
 
+    //Edit contact
     public function edit_contact(Request $request) {
         $data = $request->all();
         $updateData = $data;
@@ -37,10 +38,12 @@ class Contacts extends Controller
         return response()->json($contact);
     }
 
+    //Delete contact
     public function delete_contact($id) {
         DB::table('contacts')->where('id', $id)->delete();
     }
 
+    //Parse AI
    public function parse_ai(Request $request)
 {
     try {
@@ -89,4 +92,4 @@ EOT;
     }
 }
 
-}
+};

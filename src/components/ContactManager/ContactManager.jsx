@@ -9,12 +9,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination, Virtual } from "swiper/modules";
+import { toast } from 'react-toastify'
 
 const ContactManager = () => {
   const [contactsData, setContactsData] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const contactsPerPage = 10
+  const contactsPerPage = 5
   const [selectedContact, setSelectedContact] = useState(null)
   const [editedContact, setEditedContact] = useState(null)
 
@@ -26,12 +27,12 @@ const ContactManager = () => {
     setMobileSearch(!mobileSearch)
   };
 
+  // Fetch all contacts
   useEffect(() => {
     fetch('http://localhost:8000/api/contacts')
       .then((res) => res.json())
       .then((data) => {
         setContactsData(data)
-        console.log(data)
       })
   }, [])
 
@@ -60,8 +61,9 @@ const ContactManager = () => {
       });
 
       const result = await response.json();
-      setContactsData(prev => [result, ...prev]);
+      toast.success("Contact has been added successfully");
       setCurrentPage(1);
+      setContactsData(prev => [result, ...prev]);
       form.reset();
 
     } catch (error) {
@@ -85,7 +87,7 @@ const ContactManager = () => {
       });
 
       const result = await response.json();
-      console.log(result);
+      toast.success("Contact has been updated successfully");
       setContactsData(prevContacts =>
         prevContacts.map(contact =>
           contact.id === result.id ? result : contact
@@ -107,6 +109,7 @@ const ContactManager = () => {
         },
       });
 
+      toast.success("Contact has been deleted successfully");
       setContactsData(prev =>
         prev.filter(contact => contact.id !== selectedContact.id)
       );
@@ -125,7 +128,6 @@ const ContactManager = () => {
     (contact.email?.toLowerCase().includes(searchTerm.toLowerCase())) ||
     (contact.company?.toLowerCase().includes(searchTerm.toLowerCase()))
   )
-
 
   const indexOfLastContact = currentPage * contactsPerPage
   const indexOfFirstContact = indexOfLastContact - contactsPerPage
@@ -257,8 +259,8 @@ const ContactManager = () => {
           </thead>
           <tbody>
             {currentContacts.length > 0 ? (
-              currentContacts.map((contact, index) => (
-                <tr key={index}>
+              currentContacts.map((contact) => (
+                <tr key={contact.id}>
                   <td>{contact.id}</td>
                   <td>{contact.first_name}</td>
                   <td>{contact.last_name}</td>
@@ -291,11 +293,12 @@ const ContactManager = () => {
               ))
             ) : (
               <tr>
-                <td colSpan='7' className='text-center text-muted py-4'>
+                <td colSpan='7' className='text-center py-4'>
                   <p className='mb-1 fw-semibold'>You have no contacts yet.</p>
                   <small>
                     Add meeting notes to extract contacts, or{' '}
-                    <a href='/' className='text-decoration-underline text-primary'>
+                    <a href='/' className='text-decoration-underline text-primary' data-bs-toggle='modal'
+                      data-bs-target='#addContactModal'>
                       add a contact manually.
                     </a>
                   </small>

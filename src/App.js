@@ -1,3 +1,4 @@
+import { ToastContainer } from 'react-toastify';
 import './App.css';
 import AiParser from './components/AiParser/AiParser';
 import ContactManager from './components/ContactManager/ContactManager';
@@ -9,6 +10,8 @@ const  App = () => {
       <AiParser/>
       <ContactManager/>
       <ThemeToggle/>
+
+      <ToastContainer />
     </>
   );
 };
