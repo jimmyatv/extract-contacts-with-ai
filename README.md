@@ -1,71 +1,88 @@
-# Getting Started with Create React App
+# Extract contacts with AI
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Overview
+This project is built with React frontend and Laravel backend.  
+CRUD operations are handled on the backend side, even though Laravel has built-in pagination, pagination is intentionally implemented on the frontend for more flexibility and variety.  
 
-## Available Scripts
+We used the latest technologies including ES6 arrow functions, asynchronous fetch, ternary operators, and modern variable declarations.  
 
-In the project directory, you can run:
+For better UI and responsiveness on smaller screens, we integrated `react-swiper`.  
+For notifications, `react-toastify` is used.  
+Bootstrap is primarily used for modals and triggers.  
 
-### `npm start`
+The project also features instant search and filters, and the Lighthouse performance score was optimized to near maximum.  
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+**Note:** XAMPP or a similar local server environment is recommended to run the Laravel backend if you want a smooth local development setup.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## Technologies
+- **Backend:** Laravel 10, MySQL  
+- **Frontend:** React (Functional Components, Hooks, ES6+)  
+- **UI Libraries:** Bootstrap, react-swiper, react-toastify  
+- **AI Parsing:** OpenAI GPT-4 API (used securely via backend)  
+- **Communication:** REST API with JSON  
+- **Security:** `.env` file contains sensitive keys, including OpenAI API key, and is included in `.gitignore` to avoid exposure.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Setup Instructions
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Backend Setup
+Clone the repo, install dependencies, configure `.env` with database and OpenAI key, and start the Laravel server.  
+XAMPP (or similar local PHP & MySQL environment) is recommended to run the Laravel backend smoothly during local development.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Frontend Setup
+Install npm dependencies and start the React dev server.  
+All calls to OpenAI are proxied through the backend API to keep keys secure.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## API Endpoints
+____________________________________________________________________________________________________________________
+| Method | Route              | Description                                                                        |
+|--------|--------------------|------------------------------------------------------------------------------------|
+| GET    | `/api/contacts`    | Fetch all contacts (no server-side pagination)                                     |
+| POST   | `/api/add_contact` | Add a new contact                                                                  |
+| PUT    | `/api/edit_contact`| Update an existing contact                                                         |
+| POST   | `/api/parse_ai`    | Parse contact info from text and save to DB (calls OpenAI API securely on backend) |
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## AI Parser Feature (Frontend)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- User inputs meeting notes in a textarea.  
+- Text is sent to the backend API endpoint `/api/parse_ai`, which calls OpenAI GPT-4 API securely server-side to extract JSON fields:  
+  `first_name`, `last_name`, `email`, `phone`, `company`.  
+- Parsed JSON is then saved in the backend database.  
+- This approach keeps the OpenAI API key hidden from the client.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## Architecture Notes
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Laravel backend uses API routes, Eloquent models, and standard CRUD operations.  
+- React frontend uses functional components with hooks (`useState`, `useEffect`, `useRef`).  
+- Communication is via RESTful JSON APIs.  
+- OpenAI API key is stored securely in the backend `.env` file, which is excluded from git with `.gitignore`.  
+- Pagination is fully handled on the frontend: the backend returns **all contacts at once without pagination**, and frontend slices and displays contacts per page.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+## Pagination Details
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Backend returns all contacts without server-side pagination.  
+- Pagination logic is implemented entirely on the frontend, dynamically generating pagination buttons and managing page changes locally for a flexible UI experience.
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Important Commands
 
-### Making a Progressive Web App
+```bash
+# Backend
+composer install
+php artisan serve
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# extract-contacts-with-ai
+# Frontend
+npm install
+npm start

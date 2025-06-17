@@ -43,3 +43,34 @@
 .ai-form .btn-dark:hover {
   border-color: var(--primary) !important;
 }
+
+/* Max-width 768px */
+@media screen and (max-width: 768px) {
+  .ai-parser {
+    margin-bottom: 3rem;
+  }
+  .ai-parser h1 {
+    font-size: 22px;
+  }
+
+}
+
+/* Max-width 375px */
+@media screen and (max-width: 375px) {
+  .ai-parser {
+    margin-bottom: 2rem;
+  }
+
+  .ai-form textarea {
+    font-size: 14px;
+  }
+
+  .my-btn {
+    padding: 2px 6px;
+    font-size: 14px;
+  }
+
+  .click-to-try>button {
+    font-size: 14px;
+  }
+}

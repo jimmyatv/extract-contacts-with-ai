@@ -1,3 +1,7 @@
+
+.contact-manager {
+    padding: 40px 20px;
+}
 .add-contact {
     border: none;
     padding: 6px 8px;
@@ -40,6 +44,7 @@
     border-radius: 4px;
     cursor: pointer;
 }
+
 .mobile-search {
     display: none;
 }
@@ -79,7 +84,7 @@
     .search.is-active {
         opacity: 1;
         visibility: visible;
-        top: -48px;
+        top: -50px;
     }
 
     .search svg {
@@ -88,6 +93,13 @@
 
     .mySwiper .swiper-pagination {
         bottom: -7px !important;
-        
+
+    }
+}
+
+/* Max-width  */
+@media screen and (max-width: 568px) {
+    .cm-left {
+        margin-bottom: 10px;
     }
 }

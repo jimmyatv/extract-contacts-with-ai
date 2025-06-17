@@ -49,7 +49,7 @@ const AiParser = () => {
 
       <div className="ai-form">
         <textarea
-          className="form-control w-100 mb-3 fs-5 pb-5"
+          className="form-control w-100 mb-3 pb-5"
           rows="4"
           placeholder="Add your meeting notes here..."
           value={note}

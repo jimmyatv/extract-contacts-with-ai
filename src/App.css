@@ -1,67 +1,67 @@
 /* My Variables */
 :root {
-    --primary: #1A639E;
-    --secondary: #737373;
-    --headingsMainFont: 'Source Sans Pro', sans-serif;
-    --ulFonts: "Public Sans", system-ui;
-    --ulSize: 14px;
-    --light: #fff;
-    --dark: #000000;
-    --burger-menuColor: #1C1B1F;
-    --border: #F4F4F4;
-    --transition: .3s linear;
-    --imgTransition: filter 0.3s ease;
-    --radius: 8px;
-    --headingsSize: 28px;
-    --bodySize: 16px;
-    --lineHeight: 32px;
-    --footer: #1D1F26;
+  --primary: #1A639E;
+  --secondary: #737373;
+  --headingsMainFont: 'Source Sans Pro', sans-serif;
+  --ulFonts: "Public Sans", system-ui;
+  --ulSize: 14px;
+  --light: #fff;
+  --dark: #000000;
+  --burger-menuColor: #1C1B1F;
+  --border: #F4F4F4;
+  --transition: .3s linear;
+  --imgTransition: filter 0.3s ease;
+  --radius: 8px;
+  --headingsSize: 28px;
+  --bodySize: 16px;
+  --lineHeight: 32px;
+  --footer: #1D1F26;
 }
 
 /* My basic styles */
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: var(--headingsMainFont);
-    font-weight: 400;
-    font-size: var(--bodySize);
+  font-family: var(--headingsMainFont);
+  font-weight: 400;
+  font-size: var(--bodySize);
 }
 
 h1 {
-    color: var(--primary);
-    font-size: var(--headingsSize);
+  color: var(--primary);
+  font-size: var(--headingsSize);
 }
 
 a {
-    text-decoration: none;
-    color: var(--secondary);
+  text-decoration: none;
+  color: var(--secondary);
 }
 
 img {
-    display: block;
-    max-width: 100%;
+  display: block;
+  max-width: 100%;
 }
 
 ul {
-    list-style: none;
+  list-style: none;
 }
 
 .container {
-    width: 1440px;
-    max-width: 100%;
-    margin: auto;
+  width: 1440px;
+  max-width: 100%;
+  margin: auto;
 }
 
 .my-btn {
-    transition: var(--transition);
-    padding: 4px 8px;
-    border-radius: var(--radius);
-    background-color: var(--dark);
-    color: var(--light);
+  transition: var(--transition);
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  background-color: var(--dark);
+  color: var(--light);
 }
 
 .my-btn:hover {
@@ -69,15 +69,15 @@ ul {
 }
 
 .btn-primary {
-    background: var(--primary) !important;
+  background: var(--primary) !important;
 }
 
 .btn-outline-primary {
-    color: var(--primary) !important;
+  color: var(--primary) !important;
 }
 
 .text-primary {
-    color: var(--primary) !important;
+  color: var(--primary) !important;
 }
 
 /* DARK THEME GLOBAL !!! */
@@ -132,4 +132,38 @@ body.dark-mode .btn-close {
   filter: invert(1);
 }
 
+/* === Pagination === */
+body.dark-mode .swiper-pagination-bullet {
+  background-color: #fff !important;
+  opacity: 0.7;
+}
 
+body.dark-mode .swiper-pagination-bullet-active {
+  background-color: var(--primary) !important;
+  opacity: 1;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 0.2rem rgba(26, 99, 158, 0.4) !important;
+}
+
+
+@media screen and (min-width: 768px) {
+  .btn:hover {
+    background-color: inherit !important;
+    color: inherit !important;
+    box-shadow: none !important;
+    border-color: inherit !important;
+  }
+}
+
+/* Max-width 375px */
+@media screen and (max-width: 768px) {
+  p {
+    font-size: 14px;
+  }
+
+}

@@ -224,7 +224,7 @@ const ContactManager = () => {
   return (
     <section className='contact-manager container'>
       <div className='contacts-header position-relative row'>
-        <div className='cm-left d-flex justify-content-between col-9 col-md-8 col-sm-10'>
+        <div className='cm-left d-flex justify-content-between col-12 col-md-8 col-sm-10'>
           <h2 className='fw-bold mb-0 d-flex align-items-center'>Contacts</h2>
           <button
             className='add-contact d-flex justify-content-between align-items-center radius'
@@ -232,11 +232,11 @@ const ContactManager = () => {
             data-bs-target='#addContactModal'
             aria-label='Add contact'
           >
-            <IoMdAddCircleOutline className='me-1' /> Add manually
+            <IoMdAddCircleOutline className='me-1' /> <span>Add manually</span>
           </button>
         </div>
 
-        <div className='cm-right col-3 col-md-4 col-sm-2 d-flex justify-content-end align-items-center mt-0'>
+        <div className='cm-right col-12 col-md-4 col-sm-2 d-flex justify-content-end align-items-center mt-0'>
           <div className={`search w-100 me-2 ${mobileSearch ? 'is-active' : ''}`}>
             <div className={`desktop-search position-relative`}>
               <LuSearch
