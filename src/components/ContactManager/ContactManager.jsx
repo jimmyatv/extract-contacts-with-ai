@@ -11,7 +11,7 @@ import "swiper/css/pagination";
 import { Pagination, Virtual } from "swiper/modules";
 import { toast } from 'react-toastify'
 
-const ContactManager = () => {
+const ContactManager = ({ children }) => {
   const [contactsData, setContactsData] = useState([]);
   const [allContacts, setAllContacts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -20,9 +20,11 @@ const ContactManager = () => {
   const contactsPerPage = 10
   const [selectedContact, setSelectedContact] = useState(null)
   const [editedContact, setEditedContact] = useState(null)
+  const [mobileSearch, setMobileSearch] = useState(false);
 
   const modalRef = useRef(null);
   const bsModal = useRef(null);
+
 
   // Close modal when adding a new contact
   useEffect(() => {
@@ -33,8 +35,6 @@ const ContactManager = () => {
 
 
   // mobile search 
-  const [mobileSearch, setMobileSearch] = useState(false);
-
   const handleMobileSearch = () => {
     setMobileSearch(!mobileSearch)
   };
@@ -149,11 +149,17 @@ const ContactManager = () => {
     (contact.company?.toLowerCase().includes(searchTerm.toLowerCase()))
   )
 
-  const indexOfLastContact = currentPage * contactsPerPage
-  const indexOfFirstContact = indexOfLastContact - contactsPerPage
-  const currentContacts = filteredContacts.slice(indexOfFirstContact, indexOfLastContact)
-  const totalPages = Math.ceil(filteredContacts.length / contactsPerPage)
+  const indexOfLastContact = currentPage * contactsPerPage;
+  const indexOfFirstContact = indexOfLastContact - contactsPerPage;
+  const currentContacts = filteredContacts.slice(indexOfFirstContact, indexOfLastContact);
+  const totalPages = Math.ceil(filteredContacts.length / contactsPerPage);
 
+  // Pagination reset
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
+
+  // Page change
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber)
   }
@@ -182,7 +188,6 @@ const ContactManager = () => {
 
       buttons.push(totalPages)
     }
-
     return buttons
   }
 
@@ -215,14 +220,9 @@ const ContactManager = () => {
     setContactsData(filtered);
   };
 
-
-
-
-
-
-
   return (
     <section className='contact-manager container'>
+      {children && children(setContactsData)}
       <div className='contacts-header position-relative row'>
         <div className='cm-left d-flex justify-content-between col-12 col-md-8 col-sm-10'>
           <h2 className='fw-bold mb-0 d-flex align-items-center'>Contacts</h2>
@@ -278,7 +278,7 @@ const ContactManager = () => {
           <div className='modal-dialog modal-dialog-centered'>
             <div className='modal-content'>
               <div className='modal-header'>
-                <h5 className='modal-title'>Add Contact</h5>
+                <h5 className='modal-title text-primary'>Add Contact</h5>
                 <button type='button' className='btn-close' data-bs-dismiss='modal' aria-label='Add contact'></button>
               </div>
               <form method="POST" onSubmit={createContact}>
@@ -399,7 +399,7 @@ const ContactManager = () => {
         <div className='modal-dialog modal-dialog-centered'>
           <div className='modal-content'>
             <div className='modal-header'>
-              <h5 className='modal-title'>Are you sure you want to delete contact?</h5>
+              <h5 className='modal-title text-primary'>Are you sure you want to delete contact?</h5>
               <button type='button' className='btn-close' data-bs-dismiss='modal' aria-label='Close modal'></button>
             </div>
             <div className='modal-footer d-flex justify-content-center'>
@@ -463,7 +463,7 @@ const ContactManager = () => {
         <div className='modal-dialog modal-dialog-centered'>
           <div className='modal-content'>
             <div className='modal-header'>
-              <h5 className='modal-title'>Edit Contact</h5>
+              <h5 className='modal-title text-primary'>Edit Contact</h5>
               <button type='button' className='btn-close' data-bs-dismiss='modal' aria-label='Close modal'></button>
             </div>
             <form onSubmit={edit_contact}>
@@ -511,7 +511,7 @@ const ContactManager = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Mobile Cards with React swiper */}
       <div className="mobile-cards d-block d-md-none mt-4">
         <Swiper

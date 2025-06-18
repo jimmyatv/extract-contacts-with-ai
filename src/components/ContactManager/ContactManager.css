@@ -84,7 +84,7 @@
     .search.is-active {
         opacity: 1;
         visibility: visible;
-        top: -50px;
+        top: -47px;
     }
 
     .search svg {
@@ -97,9 +97,20 @@
     }
 }
 
-/* Max-width  */
+/* Max-width 568px  */
 @media screen and (max-width: 568px) {
     .cm-left {
         margin-bottom: 10px;
+    }
+}
+
+/* Max-width  375px*/
+@media screen and (max-width: 375px) {
+    .add-contact {
+        font-size: 14px;
+    }
+
+    .cm-left>h2 {
+        font-size: 22px;
     }
 }

@@ -76,20 +76,26 @@ EOT;
         ]);
 
         $content = $response->json()['choices'][0]['message']['content'] ?? null;
-
         $parsed = json_decode($content, true);
+
+      
+        $newContactId = DB::table('contacts')->insertGetId($parsed);
+
+
+        $newContact = DB::table('contacts')->where('id', $newContactId)->first();
 
         return response()->json([
             'success' => true,
-            'data' => $parsed,
+            'data' => $newContact,
         ]);
+
     } catch (\Throwable $e) {
         return response()->json([
             'success' => false,
             'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
         ], 500);
     }
 }
 
-};
+
+}

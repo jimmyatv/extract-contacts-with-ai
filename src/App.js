@@ -4,12 +4,14 @@ import AiParser from './components/AiParser/AiParser';
 import ContactManager from './components/ContactManager/ContactManager';
 import ThemeToggle from './components/ThemeToggle/ThemeToggle';
 
-const  App = () => {
+const App = () => {
   return (
     <>
-      <AiParser/>
-      <ContactManager/>
-      <ThemeToggle/>
+      <ContactManager>
+        {(setContactsData) => <AiParser setContactsData={setContactsData} />}
+      </ContactManager>
+
+      <ThemeToggle />
 
       <ToastContainer />
     </>
