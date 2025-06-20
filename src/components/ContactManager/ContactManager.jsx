@@ -246,7 +246,7 @@ const ContactManager = ({ children }) => {
           </button>
         </div>
 
-        <div className='cm-right col-12 col-md-4 col-sm-2 d-flex justify-content-end align-items-center mt-0'>
+        <div className='cm-right col-12 col-md-4 col-sm-2 d-flex justify-content-center justify-content-md-end align-items-center mt-0'>
           <div className={`search w-100 me-2 ${mobileSearch ? 'is-active' : ''}`}>
             <div className={`desktop-search position-relative`}>
               <LuSearch
