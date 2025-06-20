@@ -7,6 +7,7 @@ const AiParser = ({ setContactsData }) => {
   const [note, setNote] = useState('');
   const [showExample, setShowExample] = useState(true);
   const [isExtracting, setIsExtracting] = useState(false);
+  const API_URL = process.env.REACT_APP_API_URL
 
   const exampleNote = `Today I had an interview with Alexandar Rasic. His email is rasic.alexandar@gmail.com, and his phone number is +381628684444. He successfully passed the first interview, and we scheduled the next one for June 20, 2025.`;
 
@@ -30,7 +31,7 @@ const AiParser = ({ setContactsData }) => {
     setIsExtracting(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/parse_ai", {
+      const response = await fetch(`${API_URL}/api/parse_ai`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: note }),

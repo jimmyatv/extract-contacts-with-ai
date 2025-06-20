@@ -10,14 +10,12 @@ For better UI and responsiveness on smaller screens, we integrated `react-swiper
 For notifications, `react-toastify` is used.  
 Bootstrap is primarily used for modals and triggers.  
 
-The project also features instant search and filters, and the Lighthouse performance score was optimized to near maximum.  
-
-**Note:** XAMPP or a similar local server environment is recommended to run the Laravel backend if you want a smooth local development setup.
+The project also features instant search and filters, and the Lighthouse performance score was optimized to near maximum.
 
 ---
 
 ## Technologies
-- **Backend:** Laravel 10, MySQL  
+- **Backend:** Laravel 10, PostgreSQL (Supabase)  
 - **Frontend:** React (Functional Components, Hooks, ES6+)  
 - **UI Libraries:** Bootstrap, react-swiper, react-toastify  
 - **AI Parsing:** OpenAI GPT-4 API (used securely via backend)  
@@ -28,18 +26,66 @@ The project also features instant search and filters, and the Lighthouse perform
 
 ## Setup Instructions
 
-### Backend Setup
-Clone the repo, install dependencies, configure `.env` with database and OpenAI key, and start the Laravel server.  
-XAMPP (or similar local PHP & MySQL environment) is recommended to run the Laravel backend smoothly during local development.
+### Backend Setup  
+- Clone the repo and enter the folder:  
+    ```bash
+    git clone <backend-repo-url>
+    cd <backend-folder>
+    ```  
 
-### Frontend Setup
-Install npm dependencies and start the React dev server.  
-All calls to OpenAI are proxied through the backend API to keep keys secure.
+- Install dependencies:  
+    ```bash
+    composer install
+    ```  
+
+- Copy `.env.example` to `.env`:  
+    ```bash
+    cp .env.example .env
+    ```  
+
+- Configure `.env` for PostgreSQL Supabase:  
+    ```
+    DB_CONNECTION=pgsql
+    DB_HOST=aws-0-eu-central-1.pooler.supabase.com
+    DB_PORT=5432
+    DB_DATABASE=postgres
+    DB_USERNAME=postgres_jpbcrjejvprzjypordur
+    DB_PASSWORD=**********
+    OPENAI_API_KEY=your_openai_key
+    ```  
+
+- Run migrations:  
+    ```bash
+    php artisan migrate
+    ```  
+
+---
+
+### Frontend Setup  
+- Clone frontend repo and enter the folder:  
+    ```bash
+    git clone <frontend-repo-url>
+    cd <frontend-folder>
+    ```  
+
+- Install npm packages:  
+    ```bash
+    npm install
+    ```  
+
+- Create `.env` file in frontend root with:  
+    ```
+    REACT_APP_API_URL=https://my-laravel-app-382993121744.europe-west1.run.app
+    ```  
+
+- Run frontend dev server:  
+    ```bash
+    npm start
+    ```  
 
 ---
 
 ## API Endpoints
-____________________________________________________________________________________________________________________
 | Method | Route              | Description                                                                        |
 |--------|--------------------|------------------------------------------------------------------------------------|
 | GET    | `/api/contacts`    | Fetch all contacts (no server-side pagination)                                     |
@@ -81,7 +127,7 @@ ________________________________________________________________________________
 ```bash
 # Backend
 composer install
-php artisan serve
+php artisan migrate
 
 # Frontend
 npm install

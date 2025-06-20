@@ -21,6 +21,8 @@ const ContactManager = ({ children }) => {
   const [selectedContact, setSelectedContact] = useState(null)
   const [editedContact, setEditedContact] = useState(null)
   const [mobileSearch, setMobileSearch] = useState(false);
+  const API_URL = process.env.REACT_APP_API_URL
+
 
   const modalRef = useRef(null);
   const bsModal = useRef(null);
@@ -41,13 +43,21 @@ const ContactManager = ({ children }) => {
 
   // Fetch all contacts
   useEffect(() => {
-    fetch('http://localhost:8000/api/contacts')
-      .then((res) => res.json())
+    const API_URL = process.env.REACT_APP_API_URL;
+
+    fetch(`${API_URL}/api/contacts`)
+      .then((res) => {
+        if (!res.ok) throw new Error('Network response was not ok');
+        return res.json();
+      })
       .then((data) => {
         setContactsData(data);
         setAllContacts(data);
       })
-  }, [])
+      .catch(() => {
+        toast.error('Failed to fetch contacts.');
+      });
+  }, []);
 
 
   //Create/Add contact
@@ -67,7 +77,7 @@ const ContactManager = ({ children }) => {
     };
 
     try {
-      const response = await fetch('http://localhost:8000/api/add_contact', {
+      const response = await fetch(`${API_URL}/api/add_contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -97,7 +107,7 @@ const ContactManager = ({ children }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:8000/api/edit_contact', {
+      const response = await fetch(`${API_URL}/api/edit_contact`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -122,7 +132,7 @@ const ContactManager = ({ children }) => {
   //Delete contact
   const deleteContact = async () => {
     try {
-      await fetch(`http://localhost:8000/api/delete_contact/${selectedContact.id}`, {
+      await fetch(`${API_URL}/api/delete_contact/${selectedContact.id}`, {
         method: 'PUT',
         headers: {
           'Accept': 'application/json',
