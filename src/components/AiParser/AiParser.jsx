@@ -28,22 +28,29 @@ const AiParser = ({ setContactsData }) => {
   const handleParse = async (e) => {
     e.preventDefault();
 
+    const trimmedNote = note.trim();
+
+    if (!trimmedNote) {
+      toast.error("Input cannot be empty.");
+      return;
+    }
+
     setIsExtracting(true);
 
     try {
       const response = await fetch(`${API_URL}/api/parse_ai`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: note }),
+        body: JSON.stringify({ message: trimmedNote }),
       });
 
       const data = await response.json();
+
       if (data.success) {
         const { first_name, last_name, phone, email } = data.data;
 
         if (!first_name && !last_name && !phone && !email) {
           toast.error("AI could not extract valid contact information.");
-          setIsExtracting(false);
           return;
         }
 
@@ -61,6 +68,7 @@ const AiParser = ({ setContactsData }) => {
       setIsExtracting(false);
     }
   };
+
 
 
 
