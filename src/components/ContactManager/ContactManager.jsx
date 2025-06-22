@@ -527,7 +527,7 @@ const ContactManager = ({ children }) => {
         <Swiper
           slidesPerView={2}
           spaceBetween={20}
-          pagination={{ clickable: true }}
+          pagination={{ type: 'progressbar' }}
           modules={[Pagination, Virtual]}
           virtual
           breakpoints={{
@@ -540,7 +540,7 @@ const ContactManager = ({ children }) => {
           }}
           className="mySwiper"
         >
-          {currentContacts.map((contact, idx) => (
+          {filteredContacts.map((contact, idx) => (
             <SwiperSlide key={idx} virtualIndex={idx}>
               <div className="mobile-contacts card p-3 mb-3 shadow-sm">
                 <p><strong>ID:</strong> {contact.id}</p>
@@ -578,9 +578,7 @@ const ContactManager = ({ children }) => {
             </SwiperSlide>
           ))}
         </Swiper>
-
       </div>
-
     </section>
   )
 }
