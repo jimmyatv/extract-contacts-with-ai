@@ -1,27 +1,25 @@
-import { useState, useEffect, useRef } from 'react'
-import './ContactManager.css'
-import { IoMdAddCircleOutline } from 'react-icons/io'
-import { IoFilterOutline } from 'react-icons/io5'
-import { LuSearch } from 'react-icons/lu'
-import { FiEdit3 } from 'react-icons/fi'
-import { AiOutlineDelete } from 'react-icons/ai'
+import { useState, useEffect, useRef } from 'react';
+import './ContactManager.css';
+import { MdOutlineSearch, MdOutlineSearchOff, MdFilterList, MdAddCircleOutline} from "react-icons/md";
+import { FiEdit3 } from 'react-icons/fi';
+import { AiOutlineDelete } from 'react-icons/ai';
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination, Virtual } from "swiper/modules";
-import { toast } from 'react-toastify'
+import { toast } from 'react-toastify';
 
 const ContactManager = ({ children }) => {
   const [contactsData, setContactsData] = useState([]);
   const [allContacts, setAllContacts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [isAdding, setIsAdding] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1)
-  const contactsPerPage = 10
-  const [selectedContact, setSelectedContact] = useState(null)
-  const [editedContact, setEditedContact] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1);
+  const contactsPerPage = 10;
+  const [selectedContact, setSelectedContact] = useState(null);
+  const [editedContact, setEditedContact] = useState(null);
   const [mobileSearch, setMobileSearch] = useState(false);
-  const API_URL = process.env.REACT_APP_API_URL
+  const API_URL = process.env.REACT_APP_API_URL;
 
 
   const modalRef = useRef(null);
@@ -38,8 +36,12 @@ const ContactManager = ({ children }) => {
 
   // mobile search 
   const handleMobileSearch = () => {
-    setMobileSearch(!mobileSearch)
+    if (mobileSearch) {
+      setSearchTerm('');
+    }
+    setMobileSearch(!mobileSearch);
   };
+
 
   // Fetch all contacts
   useEffect(() => {
@@ -242,16 +244,16 @@ const ContactManager = ({ children }) => {
             data-bs-target='#addContactModal'
             aria-label='Add contact'
           >
-            <IoMdAddCircleOutline className='me-1' /> <span>Add manually</span>
+            <MdAddCircleOutline  className='me-1' /> <span>Add manually</span>
           </button>
         </div>
 
         <div className='cm-right col-12 col-md-4 col-sm-2 d-flex justify-content-center justify-content-md-end align-items-center mt-0'>
           <div className={`search w-100 me-2 ${mobileSearch ? 'is-active' : ''}`}>
             <div className={`desktop-search position-relative`}>
-              <LuSearch
+              <MdOutlineSearch
                 className='position-absolute top-50 translate-middle-y'
-                style={{ left: '10px', color: '#737373', pointerEvents: 'none' }}
+                style={{ left: '10px', color: '#737373', pointerEvents: 'none', fontSize: '22px' }}
               />
               <input
                 type='text'
@@ -266,7 +268,12 @@ const ContactManager = ({ children }) => {
           <div className="main-mobile-wrapper d-flex">
             <div className='mobile-search text-end me-2'>
               <button onClick={handleMobileSearch} className={mobileSearch ? 'is-active' : ''} aria-label='Search'>
-                <LuSearch />
+                <span style={{ display: mobileSearch ? 'none' : 'inline' }}>
+                  <MdOutlineSearch style={{ fontSize: '22px' }} />
+                </span>
+                <span style={{ display: mobileSearch ? 'inline' : 'none' }}>
+                  <MdOutlineSearchOff style={{ fontSize: '22px' }} />
+                </span>
               </button>
             </div>
             <div className='filter'>
@@ -277,7 +284,7 @@ const ContactManager = ({ children }) => {
                 data-bs-target='#filterModal'
                 aria-label='Filter'
               >
-                <IoFilterOutline />
+                <MdFilterList style={{ fontSize: '22px' }} />
               </button>
             </div>
           </div>
